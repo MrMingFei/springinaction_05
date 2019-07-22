@@ -6,11 +6,16 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import spittr.bean.Product;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -42,6 +47,7 @@ public class DataConfig {
         return new JdbcTemplate(dataSource);
     }
 
+    @Bean
     public SessionFactory sessionFactoryBean(DataSource dataSource){
         try {
             LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
@@ -61,5 +67,25 @@ public class DataConfig {
     @Bean
     public BeanPostProcessor persisttenceTranslation(){
         return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public RedisConnectionFactory redisCF(){
+        JedisConnectionFactory cf = new JedisConnectionFactory();
+
+        return cf;
+    }
+
+    @Bean
+    public RedisTemplate<String, Product> redisTemplate(RedisConnectionFactory cf){
+        RedisTemplate<String, Product> redisTemplate = new RedisTemplate<String, Product>();
+        redisTemplate.setConnectionFactory(cf);
+
+        return redisTemplate;
+    }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory cf){
+        return new StringRedisTemplate(cf);
     }
 }
