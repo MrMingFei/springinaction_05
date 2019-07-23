@@ -72,7 +72,7 @@ public class DataConfig {
     @Bean
     public RedisConnectionFactory redisCF(){
         JedisConnectionFactory cf = new JedisConnectionFactory();
-
+        cf.afterPropertiesSet();
         return cf;
     }
 
