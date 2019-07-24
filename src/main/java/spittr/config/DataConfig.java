@@ -43,8 +43,8 @@ public class DataConfig {
     }
 
     @Bean
-    public JdbcOperations jdbcTemplate(DataSource dataSource){
-        return new JdbcTemplate(dataSource);
+    public JdbcOperations jdbcTemplate(DataSource Data){
+        return new JdbcTemplate(Data);
     }
 
     @Bean
@@ -80,6 +80,7 @@ public class DataConfig {
     public RedisTemplate<String, Product> redisTemplate(RedisConnectionFactory cf){
         RedisTemplate<String, Product> redisTemplate = new RedisTemplate<String, Product>();
         redisTemplate.setConnectionFactory(cf);
+        redisTemplate.afterPropertiesSet();
 
         return redisTemplate;
     }
